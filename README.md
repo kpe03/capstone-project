@@ -8,8 +8,10 @@ environmental variables and send signals to endeffectors based on algorithm.
 ### Languages
 C++
 - Version: C++ 23
+  
 Java
 - Version: Java 23
+  
 Python
 - Version:
 
