@@ -8,7 +8,7 @@ Date: 1/23/2024
 #include <unordered_map>
 #include <string>
 #include <cmath>
-// #include<catch2 / catch.hpp>
+#include <catch2 /catch_all.hpp>
 class unitTest
 {
 
