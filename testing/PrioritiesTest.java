@@ -14,28 +14,50 @@ public class PrioritiesTest {
     */
     public static void main(String[] args) {
         PrioritiesTest test = new PrioritiesTest();
-        test.checkPriorities();
+        test.testPriorityValue();
     }
     
-    public void checkPriorities() {
+    public void testPriorityValue() {
         //Define the priority order
-        List<String> priorityOrder = Arrays.asList("temperature", "humidity", "energy");
+        Map<String, Integer> desired = new HashMap<>();
+        desired.put("temperature", 20);
+        desired.put("humidity", 35);
+        desired.put("energy", 70);
 
         //Get the actual priority values
         Map<String, Integer> actualPriorities = mockAlgorithm();
 
+        List<String> priorities = Arrays.asList("temperature", "humidity", "energy");
+
+        //get percentage differences
+        Map<String, Double> differences = new HashMap<>();
 
         //Validate the priorities
-        for(int i = 0; i < priorityOrder.size(); i++) {
+        for(String key : priorities) {
             //Check for missing values, if fail print the missing priority
-            String key = priorityOrder.get(i);
 
-            if(!actualPriorities.containsKey(key)) {
-                System.out.println("Missing priority: " + key);
-            } 
+            //get the priority values
+            int finalValue = actualPriorities.get(key);
+            int desiredValue = desired.get(key);
+
+            //calculate the percentage difference
+            double percentageDifference = Math.abs(finalValue - desiredValue) / (double) desiredValue * 100;
+            differences.put(key, percentageDifference);
         }
 
-        System.out.println("Priorities are correct");   
+        //check percentage differences follow priority order
+        for (int i = 0; i < differences.size() - 1; i++) {
+            String keyHigh = priorities.get(i); // Higher priority key
+            String keyLow = priorities.get(i + 1); // Lower priority key
+
+            if (!(differences.get(keyHigh) <= differences.get(keyLow))) {
+            System.out.printf("Priority order is incorrect: %s should have a lower or equal difference than %s%n", keyHigh, keyLow);
+            return;
+            }
+            else {
+                System.out.printf("Priority order is correct: %s has a lower or equal difference than %s%n", keyHigh, keyLow);
+            }
+        }
     }
 
     /*
