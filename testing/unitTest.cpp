@@ -39,13 +39,15 @@ public:
         {
             std::string key_high = priorities[i];
             std::string key_low = priorities[i + 1];
-            if (difference[key_high] <= difference[key_low])
+            if (difference[key_high] > difference[key_low])
             {
-                std::cout << "Priority order is incorrect: " << key_high << "should have a lower or equal difference than " << key_low;
+                std::cout << "Priority order is incorrect: " << key_high << " should have a lower or equal difference than " << key_low << std::endl;
+                std::cout << "\n";
             }
             else
             {
-                std::cout << "Priority order is correct:" << key_high << "has a lower or equal difference than" << key_low;
+                std::cout << "Priority order is correct: " << key_high << " has a lower or equal difference than " << key_low << std::endl;
+                std::cout << "\n";
             }
         }
     };
