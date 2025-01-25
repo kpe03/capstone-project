@@ -36,6 +36,13 @@ Arduino
 - Temperature and Humidity sensor
 - TBD
 
+## Team Roles
+Product Owner: Mason
+Quality Assurance: David Campos
+Scrum Master 1:
+Scrum Master 2: 
+Scrum Master 3:
+
 ## Group Goals / Future Plans
 - We are planning to see what technology is readily available so we can find a starting point for the software.
 - Further discussions regarding UI implementation.

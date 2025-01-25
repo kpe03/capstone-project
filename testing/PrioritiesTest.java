@@ -65,8 +65,8 @@ public class PrioritiesTest {
     */
     private Map<String, Integer> mockAlgorithm() {
         Map<String, Integer> result = new HashMap<>();
-        result.put("temperature", 21); // Example result close to desired
-        result.put("humidity", 38);
+        result.put("temperature", 50); // Example result close to desired
+        result.put("humidity", 21);
         result.put("energy", 80);
         return result;
     }
