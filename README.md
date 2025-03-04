@@ -6,12 +6,29 @@ An automatic control system for a building's ventilation, where a software base 
 
 Some environmental conditions will have higher priority than others so our software will aim to maintain comfort as best as possible.
 
-
 As of now we are uncertain of all the hardware that we will be working with but we for sure know that we will have Arduino sensors to track indoor and outdoor environments.
 
 We have also begun discussing whether we would like to create a UI that would allow users to set their preferences. It could potentially be used to set the priority levels for each condition.
 
+## Requirements To Run Code
+This code requires several different applications and software:
+### Arduino IDE 2.3.4
+  - Make sure to install the libraries using the Library Manager
 
+### PLX-DAQ
+  - https://www.parallax.com/package/plx-daq/
+  - For writing to a .csv
+  - Windows ONLY, use the python script `read_serial.py` as an alternative
+
+## To Run Code
+### Arduino
+- Install the Arduino IDE
+- Connect the Arduino
+- Upload the `Sound_Light_Temp_Humid.ino`
+- Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
+
+### GUI
+- to be added
 
 ## Technologies 
 ### Languages
@@ -38,10 +55,11 @@ Arduino
 
 ## Team Roles
 Product Owner: Mason
-Quality Assurance: David Campos
-Scrum Master 1:
-Scrum Master 2: 
-Scrum Master 3:
+Quality Assurance: David 
+Scrum Master 1: Kaitlyn
+Scrum Master 2: Landon
+Scrum Master 3: Kazi
+Scrum Master 4: Gerry
 
 ## Group Goals / Future Plans
 - We are planning to see what technology is readily available so we can find a starting point for the software.

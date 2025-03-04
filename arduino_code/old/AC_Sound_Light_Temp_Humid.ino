@@ -1,3 +1,7 @@
+/*
+* old version of code with AC module
+*/
+
 // #include <Bonezegei_DS3231.h>
 #include <LCD_I2C.h>
 #include <DS3231.h>
@@ -22,9 +26,9 @@ unsigned int sample;
 
 
 //initialize clocks
-// Bonezegei_DS3231 rtc(0x68);
-// DS3231 rtc;
-RTClib myRTC;
+Bonezegei_DS3231 rtc(0x68);
+// // DS3231 rtc;
+// RTClib myRTC;
 
 //LCD screen
 LCD_I2C lcd(0x27, 16, 2); 
@@ -81,8 +85,8 @@ void setup() {
   Serial.println("LABEL,Date,Logging Time,Light,T-in,H-in,T-out,H-out,AC%,Sound"); //always write LABEL, to indicate it as first line
   Serial.println("RESETTIMER");
 
-  // rtc.begin();
-  // rtc.setFormat(12);        //Set 12 Hours Format
+  rtc.begin();
+  rtc.setFormat(12);        //Set 12 Hours Format
 
   Wire.begin();
   Wire.beginTransmission(0x27);  // set the LCD address to 0x27 if 0x3F not working
@@ -199,7 +203,6 @@ File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
     Serial.print("DATA, "); //always write "DATA" to Indicate the following as Data
 
-    //TIME AND DATE REPORTING IS NOT ACCURATE
     Serial.print(now.year());
     Serial.print('/');
     Serial.print(now.month());
