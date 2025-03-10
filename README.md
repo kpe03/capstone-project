@@ -1,4 +1,5 @@
 
+
 # Building Ventilation Software
 
 ## Project Description 
@@ -13,7 +14,10 @@ We have also begun discussing whether we would like to create a UI that would al
 ## Requirements To Run Code
 This code requires several different applications and software:
 ### Arduino IDE 2.3.4
-  - Make sure to install the libraries using the Library Manager
+#### Libraries
+- Adafruit Unified Sensor by Adafruit
+- DHT sensor library by Adafruit
+- Mhz19 by Eduard Malokhvi
 
 ### PLX-DAQ
   - https://www.parallax.com/package/plx-daq/
