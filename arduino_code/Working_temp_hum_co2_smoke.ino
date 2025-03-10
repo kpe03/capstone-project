@@ -6,14 +6,17 @@
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial softwareSerial(RX_PIN, TX_PIN); 
-Mhz19 sensor_co2;
 
 #define DHTPIN 7     // Digital pin connected to the DHT sensor
 #define DHTTYPE    DHT11
 
 #define RX_PIN 3     //RX pin
 #define TX_PIN 2     //TX pin
+#define MQ2PIN A0
+
+
+SoftwareSerial softwareSerial(RX_PIN, TX_PIN); 
+Mhz19 sensor_co2;
 
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
@@ -36,6 +39,9 @@ void setup() {
     delay(5000);
   }
 
+  Serial.println("MQ2 warming up!");
+  delay(20000); // allow the MQ2 to warm up
+
   Serial.println("\nReady...");
 
   sensor_t sensor;
@@ -53,10 +59,12 @@ void loop() {
   float hum = event.relative_humidity;
 
   auto CO2 = sensor_co2.getCarbonDioxide();
+
+  float smoke = analogRead(MQ2PIN);
   
 
   // if temp less than 70F send high signal to light
-  if(CO2 > 4000){ // CO2 takes highest priority
+  if(CO2 > 4000 || smoke > 4000){ // CO2 and smoke take highest priority
     digitalWrite(outputPIN, HIGH);
   }
   else if (hum > 40) {
@@ -66,11 +74,12 @@ void loop() {
     digitalWrite(outputPIN, LOW);
   }
 
-  if (CO2 >= 0) {
-    Serial.println("CO2: " + String(CO2) + " ppm");
-  }
   Serial.print("tem = "); Serial.println(temp,1);
   Serial.print("hum = "); Serial.println(hum,1);
+  Serial.print("CO2 = "); Serial.println(CO2,1);
+  Serial.print("Smoke = "); Serial.println(smoke,1);
+  Serial.println("--------------");
 
   delay(2000);
 }
+
