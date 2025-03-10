@@ -1,5 +1,6 @@
 
 
+
 # Building Ventilation Software
 
 ## Project Description 
@@ -26,10 +27,11 @@ This code requires several different applications and software:
 
 ## To Run Code
 ### Arduino
-- Install the Arduino IDE
+- Make sure all libraries are installed
 - Connect the Arduino
-- Upload the `Sound_Light_Temp_Humid.ino`
+- Verify and Upload the `Working_temp_hum_co2_smoke.ino`
 - Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
+
 
 ### GUI
 - Install PySide6 using: pip install pyside6
