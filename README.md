@@ -32,7 +32,9 @@ This code requires several different applications and software:
 - Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
 
 ### GUI
-- to be added
+- Install PySide6 using: pip install pyside6
+- Run the python code 'initalGUI.py'
+- Configure Pathname to the file generated from PLX-DAQ
 
 ## Technologies 
 ### Languages
@@ -46,6 +48,7 @@ Java
   
 Python
 - Version: Python 3.12.0
+- PySide 6
 
 ### Environment
 Arduino IDE
