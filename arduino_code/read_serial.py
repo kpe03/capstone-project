@@ -30,8 +30,6 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                         
                         # Get current timestamp
                         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-                        
-                        # Assuming Arduino sends data in the format: "temperature,humidity,co2,smoke"
                         try:
                             # Split the incoming data
                             data_parts = line.split(',')
@@ -50,7 +48,7 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 
                                 # Write to CSV
                                 csv_writer.writerow([timestamp, temperature, humidity, co2, smoke])
-                            #if not data, just print the text
+                            # if not data, just print the text
                             else:
                                 print(f"{line}")
                         ## error parsing the data

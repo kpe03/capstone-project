@@ -23,7 +23,7 @@ import pandas as pd
 
 class Ui_MainWindow(object):
 
-    file_path = ""
+    file_path = r"C:\Users\kaitl\Desktop\PLX-DAQ\plx-daq-release2b\plx-daq-release2b\PLX_temp_hum.xlsm"
 
     DefaultTemp = 25
     DefaultHumid = 40
@@ -365,7 +365,7 @@ class Ui_MainWindow(object):
     def update_data(self):
         try:
             # Read the Excel file 
-            df = pd.read_excel("/Users/gerrylin/Documents/Academic/Senior/CapStone/code/test_data_PLX2.xlsx", usecols="A:I")
+            df = pd.read_excel(self.file_path, usecols="A:I")
 
             # print("Columns in the DataFrame:", df.columns)
             df_clean = df.dropna(how="all")
