@@ -21,7 +21,7 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                 csv_writer = csv.writer(csv_file)
                 
                 # Write header for the specific data columns
-                csv_writer.writerow(['Time', 'Temperature', 'Humidity', 'CO2', 'Smoke'])
+                csv_writer.writerow(['Time', 'T-in', 'H-in', 'CO2', 'Smoke'])
                 
                 while True:
                     if ser.in_waiting > 0:

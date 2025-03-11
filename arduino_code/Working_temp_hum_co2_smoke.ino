@@ -16,6 +16,13 @@
 #define TX_PIN 2     //TX pin
 #define MQ2PIN A0
 
+// Timing variables
+unsigned long lastDataSent = 0;
+unsigned long dataSendInterval = 1000;   // Send data every 1 second
+unsigned long pauseDuration = 3000;      // Pause sending for 3 seconds
+unsigned long cycleTime = 10000;         // Complete cycle time (active + pause)
+bool serialActive = true;                // Flag to track if we're in active or pause mode
+
 
 SoftwareSerial softwareSerial(RX_PIN, TX_PIN); 
 Mhz19 sensor_co2;
@@ -23,7 +30,6 @@ Mhz19 sensor_co2;
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
 #define outputPIN 4
-
 
 void setup() {
   Serial.begin(9600);
@@ -54,13 +60,21 @@ void setup() {
   pinMode(outputPIN, OUTPUT); // set pin 4 to OUTPUT mode
 
   Serial.println("CLEARDATA"); //clears up any data left from previous projects
-  Serial.println("LABEL,Time,Temperature,Humidity,C02,Smoke"); //always write LABEL, to indicate it as first line
+  Serial.println("LABEL,Time,T-in,H-in,C02,Smoke"); //always write LABEL, to indicate it as first line
   Serial.println("RESETTIMER");
 
 }
 
 //Main code
 void loop() {
+
+  //to keep track of when to stop/start serial output
+  unsigned long currentMillis = millis();
+  unsigned long cyclePosition = currentMillis % cycleTime;
+
+  //determine if we should be in active or pause mode
+  serialActive = (cyclePosition < (cycleTime - pauseDuration));
+
 
   sensors_event_t event;
   dht.temperature().getEvent(&event);
@@ -94,21 +108,34 @@ void loop() {
   /* * * * * 
   * PLX DAQ *
   * * * * * */
-  //prints data to an excel file called plx_co2
-  Serial.print("DATA,TIME,"); //always write "DATA" to indicate the following as data
+  //read data if serial output is active
+   if (serialActive && (currentMillis - lastDataSent >= dataSendInterval)) {
+      //prints data to an excel file called plx_co2
+      Serial.print("DATA,TIME,"); //always write "DATA" to indicate the following as data
 
-  // Sensor data
-  Serial.print(temp);
-  Serial.print(",");
+      // Sensor data
+      Serial.print(temp);
+      Serial.print(",");
 
-  Serial.print(hum);
-  Serial.print(",");
+      Serial.print(hum);
+      Serial.print(",");
 
-  Serial.print(CO2);
-  Serial.print(",");
+      Serial.print(CO2);
+      Serial.print(",");
 
-  Serial.println(smoke);
-
+      Serial.println(smoke);
+   }
+  
+  // STOP printing data to serial to allow python script to read data
+  if (!serialActive && (cyclePosition == (cycleTime - pauseDuration))) {
+    Serial.println("PAUSE_BEGIN");  //Indicator that Arduino is pausing output
+    Serial.flush();                 //Ensure all data is sent before pausing
+  }
+  
+  // Resume printing to serial 
+  if (serialActive && (cyclePosition == 0)) {
+    Serial.println("PAUSE_END");  //Indicator that Arduino is resuming output
+  }
   delay(2000);
 }
 

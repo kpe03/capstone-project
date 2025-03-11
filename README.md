@@ -41,14 +41,19 @@ This code requires several different applications and software:
 - Make sure all libraries are installed
 - Connect the Arduino
 - Verify and Upload the `Working_temp_hum_co2_smoke.ino` in the Arduino IDE
-- Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
-Note: The CO2 sensor takes a few minutes to "preheat" or get started
+To output results:
+- Run `read_serial.py`
+Or:
+- Use the PLX-DAQ software
 
 ### `read_serial.py`
-- `cd arduino_code`
-- `python read_serial.py`
+- This file reads the data from the arduino sensors and prints to a .csv file
+- The arduino must have the code uploaded and be running before running the script
+To run:
+- `python .\arduino_code\read_serial.py`
 
 ### GUI
+To run the GUI:
 - Install PySide6 using: `pip install pyside6`
 - Configure Pathname to the file generated from PLX-DAQ (update variable `file_path` on line 26)
 - To run the code use the command `python initalGUI.py`
