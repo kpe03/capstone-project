@@ -62,7 +62,7 @@ void setup() {
   Serial.println("initialization done.");
     
   //open SD card file
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+  // File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
   // if the file opened ok, write to it:
   if (dataFile) {
@@ -156,57 +156,57 @@ void loop() {
    * PRINT TO SD CARD *
    * * * * * * * * * */
 
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+  // File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
-  // if the file is available, write to it:
-  if (dataFile) {
+  // // if the file is available, write to it:
+  // if (dataFile) {
 
-    //print to SD card --> date
-    dataFile.print(twoDigit(rtc.getMonth()));
-    dataFile.print("/");
-    dataFile.print(twoDigit(rtc.getDate()));
-    dataFile.print(","); //Move to next column using a ","
+  //   //print to SD card --> date
+  //   dataFile.print(twoDigit(rtc.getMonth()));
+  //   dataFile.print("/");
+  //   dataFile.print(twoDigit(rtc.getDate()));
+  //   dataFile.print(","); //Move to next column using a ","
 
   
-    String time = " " + String(rtc.getHour()) + ":" + String(twoDigit(rtc.getMinute())); 
-    dataFile.print(time + ",");     // Close the text string
-    dataFile.print(","); //Move to next column using a ","
+  //   String time = " " + String(rtc.getHour()) + ":" + String(twoDigit(rtc.getMinute())); 
+  //   dataFile.print(time + ",");     // Close the text string
+  //   dataFile.print(","); //Move to next column using a ","
 
-    //print light
-    dataFile.print(lux);
-    dataFile.print(","); 
+  //   //print light
+  //   dataFile.print(lux);
+  //   dataFile.print(","); 
 
-    //print in-temperature in celsius
-    dataFile.print(t1); 
-    dataFile.print(","); 
+  //   //print in-temperature in celsius
+  //   dataFile.print(t1); 
+  //   dataFile.print(","); 
 
-    //print in-humidity
-    dataFile.print(h1); 
-    dataFile.print(","); 
+  //   //print in-humidity
+  //   dataFile.print(h1); 
+  //   dataFile.print(","); 
 
-    //print out-temperature in celsius
-    dataFile.print(t2); //Store date on SD card
-    dataFile.print(","); //Move to next column using a ","
+  //   //print out-temperature in celsius
+  //   dataFile.print(t2); //Store date on SD card
+  //   dataFile.print(","); //Move to next column using a ","
 
-    //print out-humidity
-    dataFile.print(h2); //Store date on SD card
-    dataFile.print(","); //Move to next column using a ","
+  //   //print out-humidity
+  //   dataFile.print(h2); //Store date on SD card
+  //   dataFile.print(","); //Move to next column using a ","
 
-    //AC printing
-    // dataFile.print(ac_percentage); //Store date on SD card
-    // dataFile.print(","); //Move to next column using a ","
+  //   //AC printing
+  //   // dataFile.print(ac_percentage); //Store date on SD card
+  //   // dataFile.print(","); //Move to next column using a ","
 
-    //print sound level (db)
-    dataFile.print(db); //Store date on SD card
-    dataFile.print(","); //Move to next column using a ","
+  //   //print sound level (db)
+  //   dataFile.print(db); //Store date on SD card
+  //   dataFile.print(","); //Move to next column using a ","
 
 
-    dataFile.println(); //End of Row move to next row
-    dataFile.close(); //Close the file
-  }
-  else {
-    Serial.println("OOPS!! SD card writing failed");
-  }
+  //   dataFile.println(); //End of Row move to next row
+  //   dataFile.close(); //Close the file
+  // }
+  // else {
+  //   Serial.println("OOPS!! SD card writing failed");
+  // }
     
   
   

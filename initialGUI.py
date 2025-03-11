@@ -23,8 +23,8 @@ import pandas as pd
 
 class Ui_MainWindow(object):
 
-    file_path = ""
-
+    #file_path = r"C:\Users\kaitl\Desktop\PLX-DAQ\plx-daq-release2b\plx-daq-release2b\PLX_co2.xlsm"
+    file_path = "./arduino_data.csv"
     DefaultTemp = 25
     DefaultHumid = 40
 
@@ -86,12 +86,12 @@ class Ui_MainWindow(object):
         self.TimeTimer = QTimer()
         self.TimeTimer.timeout.connect(
             lambda: self.CurrTime.setText(f"Current Time: {QDateTime.currentDateTime().toString('hh:mm AP')}"))
-        self.TimeTimer.start(60000)
+        self.TimeTimer.start(1000)
 
         # Update data every min from the excel
         self.DataTimer = QTimer()
         self.DataTimer.timeout.connect(self.update_data)
-        self.DataTimer.start(60000)
+        self.DataTimer.start(1000)
         #initial data update
         QTimer.singleShot(0,self.update_data)
 
@@ -365,23 +365,26 @@ class Ui_MainWindow(object):
     def update_data(self):
         try:
             # Read the Excel file 
-            df = pd.read_excel("/Users/gerrylin/Documents/Academic/Senior/CapStone/code/test_data_PLX2.xlsx", usecols="A:I")
+            df = pd.read_csv(self.file_path)
 
             # print("Columns in the DataFrame:", df.columns)
             df_clean = df.dropna(how="all")
 
             latest = df_clean.iloc[-1]
+            
+            print(df.head())
 
             # Update indoor values (adjust the column names if necessary)
             self.Indoor["Temperature"] = latest["T-in"]
             self.Indoor["Humidity"] = latest["H-in"]
-            self.Indoor["Light"] = latest["Light"]
-            self.Indoor["Sound"] = latest["Sound"]
+
+            #self.Indoor["Light"] = latest["Light"]
+            #self.Indoor["Sound"] = latest["Sound"]
             # Update outdoor values
-            self.Outdoor["Temperature"] = latest["T-out"]
-            self.Outdoor["Humidity"] = latest["H-out"]
-            self.Outdoor["Light"] = latest["Light"]
-            self.Outdoor["Sound"] = latest["Sound"]
+            #self.Outdoor["Temperature"] = latest["T-out"]
+            #self.Outdoor["Humidity"] = latest["H-out"]
+            #self.Outdoor["Light"] = latest["Light"]
+            #self.Outdoor["Sound"] = latest["Sound"]
 
         except Exception as e:
             print("Error reading xlsx file:", e)
