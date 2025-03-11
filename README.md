@@ -1,5 +1,6 @@
 
 
+
 # Building Ventilation Software
 
 ## Project Description 
@@ -37,11 +38,15 @@ This code requires several different applications and software:
 
 ## To Run Code
 ### Arduino
-- Install the Arduino IDE
-- Connect the Arduino via USB
-- Upload the `Sound_Light_Temp_Humid.ino` file to the Arduino
-- Use PLX-DAQ to write the data to an excel file 
-- You can also view the outputs of the Arduino through `Serial Monitor` on the Arduino IDE, or by running the `read_serial.py` code
+- Make sure all libraries are installed
+- Connect the Arduino
+- Verify and Upload the `Working_temp_hum_co2_smoke.ino` in the Arduino IDE
+- Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
+Note: The CO2 sensor takes a few minutes to "preheat" or get started
+
+### `read_serial.py`
+- `cd arduino_code`
+- `python read_serial.py`
 
 ### GUI
 - Install PySide6 using: `pip install pyside6`
