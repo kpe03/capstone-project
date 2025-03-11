@@ -1,5 +1,7 @@
 # This python code is an alternative to using PLX DAQ
 # this code prints: time, temperature, humidity, co2 and smoke levels to a csv 'arduino_data.csv'
+
+# change the port if necessary for the arduino
 import serial
 import csv
 import time
@@ -48,11 +50,9 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 
                                 # Write to CSV
                                 csv_writer.writerow([timestamp, temperature, humidity, co2, smoke])
+                            #if not data, just print the text
                             else:
                                 print(f"{line}")
-                                # Write raw data with empty values for missing columns
-                                # row = [timestamp] + data_parts + [''] * (4 - len(data_parts))
-                                # csv_writer.writerow(row[:5])  # Ensure we only have 5 columns
                         ## error parsing the data
                         except Exception as e:
                             print(f"Error parsing data '{line}': {e}")
