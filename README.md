@@ -11,8 +11,19 @@ As of now we are uncertain of all the hardware that we will be working with but 
 
 We have also begun discussing whether we would like to create a UI that would allow users to set their preferences. It could potentially be used to set the priority levels for each condition.
 
+## Contributions and Practices
+If contributing:
+- Follow the coding style and conventions
+- Write variable, method, and class names to be descriptive
+- Write comments
+
+## Branching and Merging
+- For new features create a branch such as:
+`git checkout -b feature-name`
+
 ## Requirements To Run Code
 This code requires several different applications and software:
+
 ### Arduino IDE 2.3.4
 #### Libraries
 - Adafruit Unified Sensor by Adafruit
@@ -20,31 +31,28 @@ This code requires several different applications and software:
 - Mhz19 by Eduard Malokhvi
 
 ### PLX-DAQ
-  - https://www.parallax.com/package/plx-daq/
-  - For writing to a .csv
-  - Windows ONLY, use the python script `read_serial.py` as an alternative
+  - Download from: https://www.parallax.com/package/plx-daq/
+  - This is a software for writing data from Arduino output to an excel file
+  - Note: Windows ONLY 
 
 ## To Run Code
 ### Arduino
 - Install the Arduino IDE
-- Connect the Arduino
-- Upload the `Sound_Light_Temp_Humid.ino`
-- Open 'Serial Monitor', PLX DAQ, or the python script `read_serial.py` to output the results
+- Connect the Arduino via USB
+- Upload the `Sound_Light_Temp_Humid.ino` file to the Arduino
+- Use PLX-DAQ to write the data to an excel file 
+- You can also view the outputs of the Arduino through `Serial Monitor` on the Arduino IDE, or by running the `read_serial.py` code
 
 ### GUI
-- Install PySide6 using: pip install pyside6
-- Run the python code 'initalGUI.py'
-- Configure Pathname to the file generated from PLX-DAQ
+- Install PySide6 using: `pip install pyside6`
+- Configure Pathname to the file generated from PLX-DAQ (update variable `file_path` on line 26)
+- To run the code use the command `python initalGUI.py`
 
 ## Technologies 
 ### Languages
 C++
 - Version: C++ 23
 - Arduino language based on C++
-  
-Java
-- Version: Java 23
-- Swing or JavaFX
   
 Python
 - Version: Python 3.12.0
@@ -58,7 +66,10 @@ Arduino IDE
 Arduino
 - Model: unknown
 - Temperature and Humidity sensor
-- TBD
+- Light sensor
+- Sound sensor
+- CO2 sensor
+- Smoke sensor
 
 ## Team Roles
 Product Owner: Mason
