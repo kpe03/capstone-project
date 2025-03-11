@@ -23,7 +23,7 @@ import pandas as pd
 
 class Ui_MainWindow(object):
 
-    file_path = r"C:\Users\kaitl\Desktop\PLX-DAQ\plx-daq-release2b\plx-daq-release2b\PLX_co2.xlsm"
+    #file_path = r"C:\Users\kaitl\Desktop\PLX-DAQ\plx-daq-release2b\plx-daq-release2b\PLX_co2.xlsm"
     file_path = "./arduino_data.csv"
     DefaultTemp = 25
     DefaultHumid = 40
