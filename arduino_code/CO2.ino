@@ -1,3 +1,4 @@
+// Code that reads in data from the CO2 sensor
 #include <Arduino.h>
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
