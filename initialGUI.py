@@ -24,7 +24,7 @@ import pandas as pd
 class Ui_MainWindow(object):
 
     #file_path = r"C:\Users\kaitl\Desktop\PLX-DAQ\plx-daq-release2b\plx-daq-release2b\PLX_co2.xlsm"
-    file_path = "./arduino_data.csv"
+    file_path = "./arduino_code/arduino_data.csv"
     DefaultTemp = 25
     DefaultHumid = 40
 
@@ -381,8 +381,8 @@ class Ui_MainWindow(object):
             #self.Indoor["Light"] = latest["Light"]
             #self.Indoor["Sound"] = latest["Sound"]
             # Update outdoor values
-            #self.Outdoor["Temperature"] = latest["T-out"]
-            #self.Outdoor["Humidity"] = latest["H-out"]
+            self.Outdoor["Temperature"] = latest["T-out"]
+            self.Outdoor["Humidity"] = latest["H-out"]
             #self.Outdoor["Light"] = latest["Light"]
             #self.Outdoor["Sound"] = latest["Sound"]
 

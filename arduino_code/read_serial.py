@@ -21,7 +21,7 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                 csv_writer = csv.writer(csv_file)
                 
                 # Write header for the specific data columns
-                csv_writer.writerow(['Time', 'T-in', 'H-in', 'CO2', 'Smoke'])
+                csv_writer.writerow(['Time', 'T-in', 'H-in', 'T-out', 'H-out', 'CO2', 'Smoke'])
                 
                 while True:
                     if ser.in_waiting > 0:
@@ -29,7 +29,7 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                         line = ser.readline().decode('utf-8').rstrip()
                         
                         # Get current timestamp
-                        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
                         try:
                             # Split the incoming data
                             data_parts = line.split(',')
@@ -40,14 +40,19 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 # Extract the actual sensor values (skipping DATA,TIME)
                                 temperature = data_parts[2]
                                 humidity = data_parts[3]
-                                co2 = data_parts[4]
-                                smoke = data_parts[5]
+                                temperature2 = data_parts[4]
+                                humidity2 = data_parts[5]
+                                # co2 = data_parts[7]
+                                # smoke = data_parts[8]
+
+                                co2 = 0
+                                smoke = 0
                                 
                                 # Print to console
-                                print(f"{timestamp}: Temp={temperature}, Humidity={humidity}, CO2={co2}, Smoke={smoke}")
+                                print(f"{timestamp}: Temp In={temperature}, Humidity In={humidity}, Temp Out={temperature2}, Humidity Out={humidity2}, CO2={co2}, Smoke={smoke}")
                                 
                                 # Write to CSV
-                                csv_writer.writerow([timestamp, temperature, humidity, co2, smoke])
+                                csv_writer.writerow([timestamp, temperature, humidity, temperature2, humidity2, co2, smoke])
                             # if not data, just print the text
                             else:
                                 print(f"{line}")
@@ -70,6 +75,6 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
 
 # Main method
 if __name__ == "__main__":
-    read_arduino_serial(port='COM10', 
+    read_arduino_serial(port='COM9', 
                        baud_rate=9600, 
                        csv_filename='arduino_data.csv')
