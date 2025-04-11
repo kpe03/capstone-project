@@ -8,19 +8,12 @@
 #include <Arduino.h>
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
-#include <CheckComfortAlgorithm.h>
+#include "CheckComfortAlgorithm.cpp"
 
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
 #define DHTPIN2 3     // dht 22 sensor 2
 #define DHTTYPE1 DHT11   // DHT 22
 #define DHTTYPE2 DHT11   // DHT 22
-
-//define temp thresholds
-// outside temps in Celsius
-#define TEMP_HIGH 29   
-#define TEMP_LOW  10   
-#define HUM_HIGH 50
-#define HUM_LOW 30
 
 // Timing variables
 unsigned long lastDataSent = 0;
@@ -97,9 +90,18 @@ void loop() {
   //float smoke = analogRead(MQ2PIN);
 
   //run the comfort point algorithm
-  C
-  
-  /* * * * *  * * * *  * * * * 
+  CheckComfortAlgorithm checker;
+  int tempCheck = checker.checkTempComfortAlgorithm(temp2);
+  int humCheck = checker.checkHumComfortAlgorithm(hum1);
+
+
+  if (tempCheck  == 1 || humCheck == 1){
+    setDelayTime(1000);
+  }
+  else{
+    setDelayTime(3000);
+  }
+    /* * * * *  * * * *  * * * * 
   * Print to serial monitor  *
   * * * * * * * * * *  * * * */
   //read data if serial output is active
