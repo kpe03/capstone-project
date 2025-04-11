@@ -15,12 +15,12 @@
 #define DHTTYPE1 DHT11   // DHT 22
 #define DHTTYPE2 DHT11   // DHT 22
 
-//define temp thresholds
+// temp thresholds declared as variables to work with python script
 // outside temps in Celsius
-#define TEMP_HIGH 29   
-#define TEMP_LOW  10   
-#define HUM_HIGH 50
-#define HUM_LOW 30
+int TEMP_HIGH = 29;   
+int TEMP_LOW  = 10;   
+int HUM_HIGH = 50;
+int HUM_LOW = 30;
 
 // Timing variables
 unsigned long lastDataSent = 0;

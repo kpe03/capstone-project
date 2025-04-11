@@ -7,6 +7,22 @@ import csv
 import time
 from datetime import datetime
 
+def update_arduino_variable(arduino_variable, new_value, port='/dev/cu.usbserial-1140', baud_rate=9600):
+    try:
+        with serial.Serial(port, baud_rate, timeout=1) as ser:
+            print(f"Connected to {port} at {baud_rate} baud.")
+
+            command = f'{arduino_variable}={new_value}\n' # changes value of desired variable
+            ser.write(command.encode()) # serial.write expects a binary string
+
+    # Error checking
+    except serial.SerialException as e:
+        print(f"Error: {e}")
+    except KeyboardInterrupt:
+        print("Serial reading stopped.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
 # Set the port accordingly
 def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.csv'):
     try:
@@ -75,6 +91,11 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
 
 # Main method
 if __name__ == "__main__":
-    read_arduino_serial(port='COM9', 
+    # read_arduino_serial(port='COM9', 
+    #                    baud_rate=9600, 
+    #                    csv_filename='arduino_data.csv')
+    
+    # COM9 is a windows port, mac uses the following:
+    read_arduino_serial(port='/dev/cu.usbserial-1140', 
                        baud_rate=9600, 
                        csv_filename='arduino_data.csv')
