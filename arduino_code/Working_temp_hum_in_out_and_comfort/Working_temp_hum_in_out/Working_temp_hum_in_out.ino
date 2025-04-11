@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
+#include <CheckComfortAlgorithm.h>
 
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
 #define DHTPIN2 3     // dht 22 sensor 2
@@ -47,43 +48,6 @@ DHT_Unified dht2(DHTPIN2, DHTTYPE2);
 void setDelayTime(unsigned long newTime) {
   delayTime = newTime;
 }
-
-// comfort point algorithm
-void checkComfortAlgorithm() {
-  // Check for high outdoor humidity
-  if (hum2 > HUM_HIGH) {
-    Serial.println("High outdoor humidity detected, delay is now 1 second");
-    setDelayTime(1000); // Set to one second
-    Serial.println(delayTime);
-    //digitalWrite(outputPIN, HIGH);
-  }
-  // Check for low outdoor humidity
-  else if (hum2 < HUM_LOW) {
-    Serial.println("Low outdoor humidity detected, delay is now 3 seconds");
-    setDelayTime(3000); // Set to three seconds
-    Serial.println(delayTime);
-     //digitalWrite(outputPIN, LOW);
-  }
-  // Check for high outdoor temperature
-  if (temp2 > TEMP_HIGH) {
-    Serial.println("High outdoor temperature detected, delay is now 1 second");
-    setDelayTime(1000); // Set to one second
-    Serial.println(delayTime);
-    //digitalWrite(outputPIN, HIGH);
-  }
-  // Check for low outdoor temperature
-  else if (temp2 < TEMP_LOW) {
-    Serial.println("Low outdoor temperature detected, delay is now 3 seconds");
-    setDelayTime(3000); // Set to three seconds
-    Serial.println(delayTime);
-    //digitalWrite(outputPIN, LOW);
-  }
-  //smoke/co2 stuff
-   // if(CO2 > 4000 || smoke > 4000){ // CO2 and smoke take highest priority
-  //   digitalWrite(outputPIN, HIGH);
-  // }
-}
-
 //Set up sensors for arduino
 void setup() {
   Serial.begin(9600);
@@ -133,8 +97,8 @@ void loop() {
   //float smoke = analogRead(MQ2PIN);
 
   //run the comfort point algorithm
-  checkComfortAlgorithm();
-
+  C
+  
   /* * * * *  * * * *  * * * * 
   * Print to serial monitor  *
   * * * * * * * * * *  * * * */
