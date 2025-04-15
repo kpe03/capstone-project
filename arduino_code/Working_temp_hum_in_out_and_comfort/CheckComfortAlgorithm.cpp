@@ -14,6 +14,7 @@ class CheckComfortAlgorithm {
      * Checks if humidity is above or below comfort thresholds.
      * @param hum The humidity value (e.g. from DHT sensor)
      * @return 1 if above HUM_HIGH, 0 if below HUM_HIGH
+     * @author Kazi Priom
      */
 
     int checkHumComfortAlgorithm(int hum) {
@@ -33,6 +34,7 @@ class CheckComfortAlgorithm {
    * Checks if temperature is above or below comfort thresholds.
    * @param temp The temperature value 
    * @return 1 if above TEMP_HIGH, 0 if below TEMP_HIGH.
+   * @author Kazi Priom
    */
 
   int checkTempComfortAlgorithm(int temp) {
@@ -53,6 +55,7 @@ class CheckComfortAlgorithm {
    * Checks if smoke level is above or below comfort thresholds.
    * @param smoke The smoke value 
    * @return 1 if above SMOKE_HIGH, 0 if below SMOKE_HIGH.
+   * @author Kazi Priom
    */
 
   int checkSmokeComfortAlgorithm(int smoke) {
@@ -70,6 +73,7 @@ class CheckComfortAlgorithm {
    * Checks if CO2 level is above or below comfort thresholds.
    * @param co2 The CO2 value
    * @return 1 if above CO2_HIGH, 0 if below CO2_HIGH.
+   * @author Kazi Priom
    */
 
   int checkCO2ComfortAlgorithm(int co2) {

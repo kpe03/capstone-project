@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
-#include "CheckComfortAlgorithm.cpp"
+#include "CheckComfortAlgorithm.h"
 
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
 #define DHTPIN2 3     // dht 22 sensor 2
