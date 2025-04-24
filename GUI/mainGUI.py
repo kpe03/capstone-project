@@ -12,6 +12,11 @@ from ui_updatedgui import Ui_MainWindow
 
 class MainWindow(QMainWindow):
 
+    # Add json file to save user modifications
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    SETTINGS_PATH = os.path.join(BASE_DIR, "user_settings.json")
+
+
     def __init__(self):
         super().__init__()
         # 1) instantiate & hook up the designer UI
@@ -35,24 +40,27 @@ class MainWindow(QMainWindow):
             "Sound": 70
         }
 
-        # 3) timers
-        # 3a) clock
+        # timers
         self.time_timer = QTimer(self)
         self.time_timer.timeout.connect(self._update_clock)
         self.time_timer.start(1000)
 
-        # 3b) data refresh
+        # data refresh
         self.data_timer = QTimer(self)
         self.data_timer.timeout.connect(self.update_data)
         self.data_timer.start(60_000)            # every minute
         QTimer.singleShot(0, self.update_data)   # initial fill
 
-        # 4) button/page wiring
+        # button/page wiring
         self.ui.ModifyButt.clicked.connect(self.switch_to_modify)
         self.ui.CancelModButt.clicked.connect(self.switch_to_main)
         self.ui.DoneModButt.clicked.connect(self.apply_modifications)
 
-        # 5) initial UI state
+        # AutoMode wiring
+        self.ui.AutoMode.toggled.connect(self.save_settings)
+        self.ui.DoneModButt.clicked.connect(self.apply_modifications)
+
+        # initial UI state
         self.switch_to_main()
         self.update_labels()
 
@@ -99,13 +107,25 @@ class MainWindow(QMainWindow):
     def switch_to_main(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.MainPage)
 
+    def save_settings(self):
+        # Save settings to json file
+        settings = {
+            "AutoMode":  self.ui.AutoMode.isChecked(),
+            "TempFrom":  self.ui.TempModifyFrom.value(),
+            "TempTo":    self.ui.TempModifyTo.value(),
+            "HumidFrom": self.ui.HumidModifyFrom.value(),
+            "HumidTo":   self.ui.HumidModifyTo.value(),
+        }
+        try:
+            with open(self.SETTINGS_PATH, "w") as f:
+                json.dump(settings, f, indent=2)
+        except Exception as e:
+            print("Error saving settings:", e)
+    
     def apply_modifications(self):
-        # read values from the spin-boxes
-        TempFrom = self.ui.TempModifyFrom.value()
-        TempTo = self.ui.TempModifyTo.value()
-        HumidFrom = self.ui.HumidModifyFrom.value()
-        HumidTo = self.ui.HumidModifyTo.value()
-
+        # save everything edited by the user
+        self.save_settings()
+        # go back to the main page
         self.switch_to_main()
 
 # —————————————————————————————
