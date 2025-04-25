@@ -6,22 +6,8 @@ import serial
 import csv
 import time
 from datetime import datetime
+import os
 
-def update_arduino_variable(arduino_variable, new_value, port='/dev/cu.usbserial-1140', baud_rate=9600):
-    try:
-        with serial.Serial(port, baud_rate, timeout=1) as ser:
-            print(f"Connected to {port} at {baud_rate} baud.")
-
-            command = f'{arduino_variable}={new_value}\n' # changes value of desired variable
-            ser.write(command.encode()) # serial.write expects a binary string
-
-    # Error checking
-    except serial.SerialException as e:
-        print(f"Error: {e}")
-    except KeyboardInterrupt:
-        print("Serial reading stopped.")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
 
 # Set the port accordingly
 def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.csv'):
@@ -66,6 +52,24 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 
                                 # Print to console
                                 print(f"{timestamp}: Temp In={temperature}, Humidity In={humidity}, Temp Out={temperature2}, Humidity Out={humidity2}, CO2={co2}, Smoke={smoke}")
+                                
+
+                                # check if update text file exists
+                                # (instead of the original function) this block of code needs to be within an open serial connection
+                                # since you can only be have one connection at a time
+                                filename = "../update.txt"
+                                if os.path.exists(filename):
+                                    # read the update file
+                                    with open(filename, 'r') as command_file:
+                                        command = command_file.read()
+                                        array = command.split()
+                                        
+                                    # try to read update.txt
+                                    arduino_variable = array[0]
+                                    new_value = array[1]
+
+                                    command = f'{arduino_variable}={new_value}\n' # changes value of desired variable
+                                    ser.write(command.encode()) # serial.write expects a binary string
                                 
                                 # Write to CSV
                                 csv_writer.writerow([timestamp, temperature, humidity, temperature2, humidity2, co2, smoke])
