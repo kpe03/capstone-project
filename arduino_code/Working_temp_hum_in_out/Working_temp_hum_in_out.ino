@@ -15,12 +15,12 @@
 #define DHTTYPE1 DHT11   // DHT 22
 #define DHTTYPE2 DHT11   // DHT 22
 
-//define temp thresholds
+// temp thresholds declared as variables to work with python script
 // outside temps in Celsius
-#define TEMP_HIGH 29   
-#define TEMP_LOW  10   
-#define HUM_HIGH 50
-#define HUM_LOW 30
+int TEMP_HIGH = 29;   
+int TEMP_LOW  = 10;   
+int HUM_HIGH = 50;
+int HUM_LOW = 30;
 
 // Timing variables
 unsigned long lastDataSent = 0;
@@ -76,13 +76,26 @@ void checkComfortAlgorithm() {
   else if (temp2 < TEMP_LOW) {
     Serial.println("Low outdoor temperature detected, delay is now 3 seconds");
     setDelayTime(3000); // Set to three seconds
-    Serial.println(delayTime);
+    Serial.println("The delay time is: " + String(delayTime));
     //digitalWrite(outputPIN, LOW);
   }
   //smoke/co2 stuff
    // if(CO2 > 4000 || smoke > 4000){ // CO2 and smoke take highest priority
   //   digitalWrite(outputPIN, HIGH);
   // }
+}
+
+// check for variable changes
+void updateVariables() {
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    int value = command.substring(command.indexOf('=') + 1).toInt();
+
+    if (command.startsWith("TEMP_HIGH=")) TEMP_HIGH = value;
+    else if (command.startsWith("TEMP_LOW=")) TEMP_LOW = value;
+    else if (command.startsWith("HUM_HIGH=")) HUM_HIGH = value;
+    else if (command.startsWith("HUM_LOW=")) HUM_LOW = value;
+  }
 }
 
 //Set up sensors for arduino
@@ -135,6 +148,24 @@ void loop() {
 
   //run the comfort point algorithm
   checkComfortAlgorithm();
+
+  // see if variables need to be updated
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    Serial.print("The command is");
+    Serial.println(command);
+    int value = command.substring(command.indexOf('=') + 1).toInt();
+
+    if (command.startsWith("TEMP_HIGH="))TEMP_HIGH = value;
+    else if (command.startsWith("TEMP_LOW=")) TEMP_LOW = value;
+    else if (command.startsWith("HUM_HIGH=")) HUM_HIGH = value;
+    else if (command.startsWith("HUM_LOW=")) HUM_LOW = value;
+  }
+
+  // // test python function
+  // if (TEMP_LOW == 1000)  Serial.println("IT WORKED OMG");
+  // Serial.print("The temp_high is: ");
+  // Serial.println(TEMP_HIGH);
 
   /* * * * *  * * * *  * * * * 
   * Print to serial monitor  *

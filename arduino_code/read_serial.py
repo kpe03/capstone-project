@@ -6,6 +6,8 @@ import serial
 import csv
 import time
 from datetime import datetime
+import os
+
 
 # Set the port accordingly
 def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.csv'):
@@ -51,6 +53,24 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 # Print to console
                                 print(f"{timestamp}: Temp In={temperature}, Humidity In={humidity}, Temp Out={temperature2}, Humidity Out={humidity2}, CO2={co2}, Smoke={smoke}")
                                 
+
+                                # check if update text file exists
+                                # (instead of the original function) this block of code needs to be within an open serial connection
+                                # since you can only be have one connection at a time
+                                filename = "../update.txt"
+                                if os.path.exists(filename):
+                                    # read the update file
+                                    with open(filename, 'r') as command_file:
+                                        command = command_file.read()
+                                        array = command.split()
+                                        
+                                    # try to read update.txt
+                                    arduino_variable = array[0]
+                                    new_value = array[1]
+
+                                    command = f'{arduino_variable}={new_value}\n' # changes value of desired variable
+                                    ser.write(command.encode()) # serial.write expects a binary string
+                                
                                 # Write to CSV
                                 csv_writer.writerow([timestamp, temperature, humidity, temperature2, humidity2, co2, smoke])
                             # if not data, just print the text
@@ -75,6 +95,11 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
 
 # Main method
 if __name__ == "__main__":
-    read_arduino_serial(port='COM9', 
+    # read_arduino_serial(port='COM9', 
+    #                    baud_rate=9600, 
+    #                    csv_filename='arduino_data.csv')
+    
+    # COM9 is a windows port, mac uses the following:
+    read_arduino_serial(port='/dev/cu.usbserial-1140', 
                        baud_rate=9600, 
                        csv_filename='arduino_data.csv')
