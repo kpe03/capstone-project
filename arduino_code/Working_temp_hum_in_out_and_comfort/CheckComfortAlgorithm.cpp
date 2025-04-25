@@ -1,6 +1,6 @@
-#define TEMP_HIGH 29
-#define TEMP_LOW 10
-#define HUM_HIGH 50
+#define TEMP_HIGH 24 //75.2
+#define TEMP_LOW 18 //64.4
+#define HUM_HIGH 60
 #define HUM_LOW 30
 #define CO2_HIGH 4000
 #define SMOKE_HIGH 4000
@@ -20,12 +20,12 @@ class CheckComfortAlgorithm {
     int checkHumComfortAlgorithm(int hum) {
       if (hum > HUM_HIGH) {
         Serial.println("High outdoor humidity detected, delay is now 1 second");
-        //digitalWrite(outputPIN, HIGH);
+        digitalWrite(outputPIN, HIGH);
         return 1;
       }
       // Check for low outdoor humidity
       else {
-        //digitalWrite(outputPIN, LOW);
+        digitalWrite(outputPIN, LOW);
         return 0;
       }
     }
@@ -41,12 +41,12 @@ class CheckComfortAlgorithm {
     // Check for high outdoor temperature
     if (temp > TEMP_HIGH) {
       Serial.println("High outdoor temperature detected, delay is now 1 second");
-      //digitalWrite(outputPIN, HIGH);
+      digitalWrite(outputPIN, HIGH);
       return 1;
     }
     // Check for low outdoor temperature
     else {
-      //digitalWrite(outputPIN, LOW);
+      digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
@@ -79,11 +79,11 @@ class CheckComfortAlgorithm {
   int checkCO2ComfortAlgorithm(int co2) {
     if (co2 > CO2_HIGH) {
       Serial.println("High CO2 levels detected, delay time is now 1 second");
-      //digitalWrite(outputPIN, HIGH);
+      digitalWrite(outputPIN, HIGH);
       return 1;
 
     } else {
-      //digitalWrite(outputPIN, LOW);
+      digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
