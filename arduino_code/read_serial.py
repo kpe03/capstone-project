@@ -78,7 +78,7 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
 
                                 # (instead of the original function) this block of code needs to be within an open serial connection
                                 # since you can only have one connection at a time
-                                filename = "../user_settings.json"
+                                filename = "../GUI/user_settings.json"
                                 if os.path.exists(filename):
                                     # read the update file
                                     with open(filename, 'r') as command_file:
