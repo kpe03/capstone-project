@@ -150,22 +150,9 @@ void loop() {
   checkComfortAlgorithm();
 
   // see if variables need to be updated
-  if (Serial.available()) {
-    String command = Serial.readStringUntil('\n');
-    Serial.print("The command is");
-    Serial.println(command);
-    int value = command.substring(command.indexOf('=') + 1).toInt();
+  updateVariables();
 
-    if (command.startsWith("TEMP_HIGH="))TEMP_HIGH = value;
-    else if (command.startsWith("TEMP_LOW=")) TEMP_LOW = value;
-    else if (command.startsWith("HUM_HIGH=")) HUM_HIGH = value;
-    else if (command.startsWith("HUM_LOW=")) HUM_LOW = value;
-  }
-
-  // // test python function
-  // if (TEMP_LOW == 1000)  Serial.println("IT WORKED OMG");
-  // Serial.print("The temp_high is: ");
-  // Serial.println(TEMP_HIGH);
+ 
 
   /* * * * *  * * * *  * * * * 
   * Print to serial monitor  *

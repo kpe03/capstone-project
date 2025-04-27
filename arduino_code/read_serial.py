@@ -7,6 +7,28 @@ import csv
 import time
 from datetime import datetime
 import os
+import json
+
+# default values
+default_values = {
+    "AutoMode": False, # i believe this will remain unused but kept just in case
+    "TempFrom": 10,
+    "TempTo": 29,
+    "HumidFrom": 30,
+    "HumidTo": 50
+}
+
+# mapping from JSON keys to Arduino variable names
+arduino_variable_map = {
+    "AutoMode": "AUTOMODE", # once again arduino code doesnt have 'AUTOMODE' yet
+    "TempFrom": "TEMP_LOW",
+    "TempTo": "TEMP_HIGH",
+    "HumidFrom": "HUM_LOW",
+    "HumidTo": "HUM_HIGH"
+}
+
+
+
 
 
 # Set the port accordingly
@@ -54,22 +76,26 @@ def read_arduino_serial(port='COM9', baud_rate=9600, csv_filename='arduino_data.
                                 print(f"{timestamp}: Temp In={temperature}, Humidity In={humidity}, Temp Out={temperature2}, Humidity Out={humidity2}, CO2={co2}, Smoke={smoke}")
                                 
 
-                                # check if update text file exists
                                 # (instead of the original function) this block of code needs to be within an open serial connection
-                                # since you can only be have one connection at a time
-                                filename = "../update.txt"
+                                # since you can only have one connection at a time
+                                filename = "../user_settings.json"
                                 if os.path.exists(filename):
                                     # read the update file
                                     with open(filename, 'r') as command_file:
-                                        command = command_file.read()
-                                        array = command.split()
-                                        
-                                    # try to read update.txt
-                                    arduino_variable = array[0]
-                                    new_value = array[1]
+                                        try:
+                                            commands = json.load(command_file)
+                                            # parse json to send to Arduino
+                                            for key, value in commands.items():
+                                                # check if any values were updated by the user
+                                                if default_values[key] != value:
+                                                    default_values[key] = value # update the local value
 
-                                    command = f'{arduino_variable}={new_value}\n' # changes value of desired variable
-                                    ser.write(command.encode()) # serial.write expects a binary string
+                                                    arduino_var_name = arduino_variable_map[key]
+                                                    # Arduino expects the format: "TEMP_HIGH=28\n"
+                                                    command = f'{arduino_var_name}={value}\n'
+                                                    ser.write(command.encode()) # send command to arduino
+                                        except json.JSONDecodeError as e:
+                                            print(e)
                                 
                                 # Write to CSV
                                 csv_writer.writerow([timestamp, temperature, humidity, temperature2, humidity2, co2, smoke])
