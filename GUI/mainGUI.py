@@ -5,7 +5,9 @@ import json
 import os
 
 from PySide6.QtCore import QTimer, QDateTime
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtGui     import QIcon, QPixmap
+
 
 # import the auto-generated UI class
 from ui_updatedgui import Ui_MainWindow
@@ -19,11 +21,11 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        # 1) instantiate & hook up the designer UI
+        # instantiate & hook up the designer UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # 2) “model” data
+        # “default” data
         self.file_path = "./arduino_code/arduino_data.csv"
         self.Indoor = {
             "Temperature": 22,
@@ -39,6 +41,7 @@ class MainWindow(QMainWindow):
             "Light": 500,
             "Sound": 70
         }
+        self.ui.AutoMode.setChecked(True)
 
         # timers
         self.time_timer = QTimer(self)
@@ -58,7 +61,6 @@ class MainWindow(QMainWindow):
 
         # AutoMode wiring
         self.ui.AutoMode.toggled.connect(self.save_settings)
-        self.ui.DoneModButt.clicked.connect(self.apply_modifications)
 
         # initial UI state
         self.switch_to_main()
@@ -109,24 +111,60 @@ class MainWindow(QMainWindow):
 
     def save_settings(self):
         # Save settings to json file
+        TempFrom = self.ui.TempModifyFrom.value()
+        TempTo = self.ui.TempModifyTo.value()
+        HumidFrom = self.ui.HumidModifyFrom.value()
+        HumidTo = self.ui.HumidModifyTo.value()
+        AutoMode = self.ui.AutoMode.isChecked()
+
+        # If Temp is out of comfort zone, pop an error
+        if(not AutoMode and (TempFrom < 18 or TempTo > 24)):
+            return self.show_range_error(
+            "Invalid Temperature Range",
+            "Ensure Temperature is within the comfrot zone [18, 24] °C."
+        )
+ 
+        
+        # Else if Humidity is out of comfort zone, pop an error
+        if(not AutoMode and (HumidFrom < 30 or HumidTo > 60)):
+            return self.show_range_error(
+            "Invalid Humidity Range",
+            "Ensure Humidity is within the Comfrot Zone [30, 60] %."
+        )
+
+
         settings = {
-            "AutoMode":  self.ui.AutoMode.isChecked(),
-            "TempFrom":  self.ui.TempModifyFrom.value(),
-            "TempTo":    self.ui.TempModifyTo.value(),
-            "HumidFrom": self.ui.HumidModifyFrom.value(),
-            "HumidTo":   self.ui.HumidModifyTo.value(),
+            "AutoMode":  AutoMode,
+            "TempFrom":  TempFrom,
+            "TempTo":    TempTo,
+            "HumidFrom": HumidFrom,
+            "HumidTo":   HumidTo,
         }
         try:
             with open(self.SETTINGS_PATH, "w") as f:
                 json.dump(settings, f, indent=2)
         except Exception as e:
             print("Error saving settings:", e)
-    
+            return False
+        return True
+        
     def apply_modifications(self):
-        # save everything edited by the user
-        self.save_settings()
-        # go back to the main page
-        self.switch_to_main()
+        if self.save_settings():
+            self.switch_to_main()
+
+
+    def show_range_error(self, title, text) -> bool:
+        msg = QMessageBox(self)
+        msg.setWindowTitle(title)
+        msg.setText(text)
+        msg.setIcon(QMessageBox.Critical)
+        msg.addButton("OK", QMessageBox.AcceptRole)
+        msg.exec()
+        return False
+
+
+
+
 
 # —————————————————————————————
 
