@@ -5,7 +5,7 @@
 #include <Arduino.h>
 #include <Mhz19.h>
 #include <SoftwareSerial.h>
-
+#include <./Working_temp_hum_in_out_and_comfort/CheckComfortAlgorithm.h>
 
 #define DHTPIN_IN 7     // Digital pin used for indoor temperature/ humidity
 #define DHTPIN_OUT 12   //Digital pin used for outdoor temperature/ humidity
@@ -90,20 +90,29 @@ void loop() {
   float smoke = analogRead(MQ2PIN);
   
 
+  CheckComfortAlgorithm checker;
+  int tempCheck = checker.checkTempComfortAlgorithm(temp_in);
+
+  int humCheck = checker.checkHumComfortAlgorithm(hum_in);
+
+  int CO2Check = checker.checkCO2ComfortAlgorithm(CO2);
+
+  int smokeCheck = checker.checkSmokeComfortAlgorithm(smoke);
+
   // if temp less than 70F send high signal to light
-  if(CO2 > 1000 || smoke > 100){ // CO2 and smoke take highest priority
-    digitalWrite(outputPIN, HIGH);
-    delay(smoke_CO2_delay);
-    digitalWrite(outputPIN, LOW);
-  }
-  else if (hum_in > 60.0) {
-    digitalWrite(outputPIN, HIGH);
-    delay(temp_hum_delay);
-    digitalWrite(outputPIN, LOW);
-  }
-  else {
-    digitalWrite(outputPIN, LOW);
-  }
+  //  if(CO2 > 1000 || smoke > 100){ // CO2 and smoke take highest priority
+   // digitalWrite(outputPIN, HIGH);
+ //   delay(smoke_CO2_delay);
+//    digitalWrite(outputPIN, LOW);
+  //}
+ // else if (hum_in > 60.0) {
+  //  digitalWrite(outputPIN, HIGH);
+   // delay(temp_hum_delay);
+//    digitalWrite(outputPIN, LOW);
+ // }
+//  else {
+ //   digitalWrite(outputPIN, LOW);
+//  }
 
   // Print sensor readings to serial output
   Serial.print("temp_in = "); Serial.println(temp_in,1);

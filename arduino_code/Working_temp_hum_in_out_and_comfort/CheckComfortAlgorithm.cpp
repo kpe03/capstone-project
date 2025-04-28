@@ -61,10 +61,10 @@ class CheckComfortAlgorithm {
   int checkSmokeComfortAlgorithm(int smoke) {
     if (smoke > SMOKE_HIGH) {
       Serial.println("High smoke levels detected, delay time is now 1 second");
-      //   digitalWrite(outputPIN, HIGH);
+         digitalWrite(outputPIN, HIGH);
       return 1;
     } else {
-      //digitalWrite(outputPIN, LOW);
+      digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
