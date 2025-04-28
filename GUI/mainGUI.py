@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         # data refresh
         self.data_timer = QTimer(self)
         self.data_timer.timeout.connect(self.update_data)
-        self.data_timer.start(60_000)            # every minute
+        self.data_timer.start(1000)            # every second
         QTimer.singleShot(0, self.update_data)   # initial fill
 
         # button/page wiring
