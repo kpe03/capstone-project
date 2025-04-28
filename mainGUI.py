@@ -87,15 +87,15 @@ class MainWindow(QMainWindow):
     def update_labels(self):
         self.ui.InTemp.setText(f"{self.Indoor['Temperature']} °C")
         self.ui.InHumid.setText(f"{self.Indoor['Humidity']}%")
-        self.ui.InLight.setText(f"{self.Indoor['Light']} lumen")
-        self.ui.InSound.setText(f"{self.Indoor['Sound']} dB")
+        #self.ui.InLight.setText(f"{self.Indoor['Light']} lumen")
+        #self.ui.InSound.setText(f"{self.Indoor['Sound']} dB")
         self.ui.CO2  .setText(f"{self.Indoor['CO2']} ppm")
         self.ui.Smoke.setText(f"{self.Indoor['Smoke']} ppm")
 
         self.ui.OuTemp.setText(f"{self.Outdoor['Temperature']} °C")
         self.ui.OutHumid.setText(f"{self.Outdoor['Humidity']}%")
-        self.ui.OutLight.setText(f"{self.Outdoor['Light']} lumen")
-        self.ui.label_14.setText(f"{self.Outdoor['Sound']} dB")  # or `self.ui.OutSound`
+        #self.ui.OutLight.setText(f"{self.Outdoor['Light']} lumen")
+        #self.ui.label_14.setText(f"{self.Outdoor['Sound']} dB")  # or `self.ui.OutSound`
 
     def switch_to_modify(self):
         # Load the current indoor values
