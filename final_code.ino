@@ -201,7 +201,7 @@ void loop() {
   int CO2Check = checkCO2ComfortAlgorithm(CO2);
 
   int smokeCheck = checkSmokeComfortAlgorithm(smoke);
-  
+
 
   // CO2 and smoke levels have first priority
   if(CO2Check == 1 || smokeCheck == 1){
@@ -209,13 +209,23 @@ void loop() {
     delay(smoke_CO2_delay);
     digitalWrite(outputPIN, LOW);
   }
-  else if(tempCheck == 1 || humCheck == 1){ 
+  else if(tempCheck == 1 && (hum_in < HUM_HIGH && hum_in > HUM_LOW)){ 
     digitalWrite(outputPIN, HIGH);
-    // Check the difference between indoor hum/temp and desired values
-    if(abs(TEMP_HIGH - temp_in) < 5 || abs(TEMP_LOW - temp_in) < 5 || abs(HUM_HIGH - hum_in) < 5 || abs(HUM_LOW - hum_in) < 5){
-      delay(temp_hum_delay1); // if less than 5 degrees c or 5% hum, delay is longer
+    // Check the difference between indoor temp and desired values
+    if(abs(TEMP_HIGH - temp_in) < 5 || abs(TEMP_LOW - temp_in) < 5){
+      delay(temp_hum_delay1); // if less than 5 degrees c, delay is longer
     }
-    else delay(temp_hum_delay2); // if more than 5 degrees c or 5% hum, delay is shorter
+    else delay(temp_hum_delay2); // if more than 5 degrees c, delay is shorter
+    
+    digitalWrite(outputPIN, LOW);
+  }
+  else if(humCheck == 1 && (temp_in < TEMP_HIGH && temp_in > TEMP_LOW)){ 
+    digitalWrite(outputPIN, HIGH);
+    // Check the difference between indoor hum and desired values
+    if(abs(HUM_HIGH - hum_in) < 5 || abs(HUM_LOW - hum_in) < 5){
+      delay(temp_hum_delay1); // if less than 5% hum, delay is longer
+    }
+    else delay(temp_hum_delay2); // if more than 5% hum, delay is shorter
     
     digitalWrite(outputPIN, LOW);
   }
