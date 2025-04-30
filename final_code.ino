@@ -7,12 +7,6 @@
 #include <SoftwareSerial.h>
 
 
-int TEMP_HIGH = 29;
-int TEMP_LOW = 10;
-int HUM_HIGH = 60;
-int HUM_LOW = 30;
-int AUTOMODE = 1;
-
 #define DHTPIN_IN 7     // Digital pin used for indoor temperature/ humidity
 #define DHTPIN_OUT 12   //Digital pin used for outdoor temperature/ humidity
 #define DHTTYPE DHT11
@@ -26,7 +20,15 @@ int AUTOMODE = 1;
 #define outputPIN 4 // Arduino pin being used to send output signal
 
 #define smoke_CO2_delay 2000 // Delay time for open/ close for high smoke or CO2 levels
-#define temp_hum_delay 5000  // Delay time for open/ close for out of range temp/ hum levels
+#define temp_hum_delay1 5000  // Delay time for open/ close for out of range temp/ hum levels
+#define temp_hum_delay2 3000
+
+
+float TEMP_HIGH = 24.0;
+float TEMP_LOW = 18.0;
+float HUM_HIGH = 60.0;
+float HUM_LOW = 30.0;
+int AUTOMODE = 1;
 
 
 // initialization
@@ -36,15 +38,18 @@ Mhz19 sensor_co2;
 DHT_Unified dht_in(DHTPIN_IN, DHTTYPE);
 DHT_Unified dht_out(DHTPIN_OUT, DHTTYPE);
 
-int checkHumComfortAlgorithm(int hum) {
-      if (hum > HUM_HIGH) {
-        Serial.println("High outdoor humidity detected");
-        //digitalWrite(outputPIN, HIGH);
+/**
+   * Checks if humidity is above or below comfort thresholds.
+   * @param hum The humidity value 
+   * @return 1 if above HUM_HIGH, 0 if below HUM_HIGH.
+   * @author Kazi Priom
+   */
+int checkHumComfortAlgorithm(float hum_in, float hum_out) {
+      if ((hum_in > HUM_HIGH && hum_out < HUM_HIGH) || (hum_in < HUM_LOW && hum_out > HUM_LOW)) {
+        Serial.println("Indoor humidity outside of comfort range");
         return 1;
       }
-      // Check for low outdoor humidity
       else {
-        //digitalWrite(outputPIN, LOW);
         return 0;
       }
     }
@@ -55,17 +60,13 @@ int checkHumComfortAlgorithm(int hum) {
    * @return 1 if above TEMP_HIGH, 0 if below TEMP_HIGH.
    * @author Kazi Priom
    */
-
-  int checkTempComfortAlgorithm(int temp) {
+  int checkTempComfortAlgorithm(float temp_in, float temp_out) {
     // Check for high outdoor temperature
-    if (temp > TEMP_HIGH) {
-      Serial.println("High outdoor temperature detected");
-      //digitalWrite(outputPIN, HIGH);
+    if ((temp_in > TEMP_HIGH && temp_out < TEMP_HIGH) || (temp_in < TEMP_LOW && temp_out > TEMP_LOW)) {
+      Serial.println("Indoor temperature outside of comfort range");
       return 1;
     }
-    // Check for low outdoor temperature
     else {
-      //digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
@@ -76,14 +77,11 @@ int checkHumComfortAlgorithm(int hum) {
    * @return 1 if above SMOKE_HIGH, 0 if below SMOKE_HIGH.
    * @author Kazi Priom
    */
-
   int checkSmokeComfortAlgorithm(int smoke) {
     if (smoke > 100) {
       Serial.println("High smoke levels detected");
-         //digitalWrite(outputPIN, HIGH);
       return 1;
     } else {
-      //digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
@@ -94,51 +92,36 @@ int checkHumComfortAlgorithm(int hum) {
    * @return 1 if above CO2_HIGH, 0 if below CO2_HIGH.
    * @author Kazi Priom
    */
-
   int checkCO2ComfortAlgorithm(int co2) {
     if (co2 > 1000) {
       Serial.println("High CO2 levels detected");
-      //digitalWrite(outputPIN, HIGH);
       return 1;
-
     } else {
-      //digitalWrite(outputPIN, LOW);
       return 0;
     }
   }
 
-
-void checkAuto() {
-  if (Serial.available()) {
-    String command = Serial.readStringUntil('\n');
-    int value = command.substring(command.indexOf('=') + 1).toInt();
-
-    if (command.startsWith("AUTOMODE=")){
-      AUTOMODE = value;
-    } 
-    
-  }
-}
-
+// Updating user set variables from the GUI
 void updateVariables() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     int value = command.substring(command.indexOf('=') + 1).toInt();
 
+    // check automode value first
     if (command.startsWith("AUTOMODE=")){
       AUTOMODE = value;
-      Serial.print(command + " " + AUTOMODE);
     } 
 
+    //only update temp and humidity ranges if automode is off
     if(AUTOMODE == 0){
       if (command.startsWith("TEMP_HIGH=")) TEMP_HIGH = value;
       else if (command.startsWith("TEMP_LOW=")) TEMP_LOW = value;
       else if (command.startsWith("HUM_HIGH=")) HUM_HIGH = value;
       else if (command.startsWith("HUM_LOW=")) HUM_LOW = value;
     }
-    else{
-      TEMP_HIGH = 29;
-      TEMP_LOW = 10;
+    else{ // if automode is on reset variables to default
+      TEMP_HIGH = 24;
+      TEMP_LOW = 18;
       HUM_HIGH = 60;
       HUM_LOW = 30;
     }
@@ -159,17 +142,16 @@ void setup() {
   sensor_co2.setMeasuringRange(Mhz19MeasuringRange::Ppm_5000);
   sensor_co2.enableAutoBaseCalibration();
 
-  /*
   Serial.print("Preheating");  // Preheating, 3 minutes
   while (!sensor_co2.isReady()) {
     Serial.print(".");
     delay(5000);
 
-  }*/
+  }
 
-  /*
+  
   Serial.println("MQ2 warming up!");
-  delay(20000); // allow the MQ2 to warm up*/
+  delay(20000); // allow the MQ2 to warm up
 
   Serial.println("\nReady...");
 
@@ -203,54 +185,43 @@ void loop() {
   float hum_out = event_out.relative_humidity;
 
   // Get CO2 level in ppm
-  //auto CO2 = sensor_co2.getCarbonDioxide();
-  int CO2 = 0;
+  int CO2 = sensor_co2.getCarbonDioxide();
 
   // Get smoke sensor reading in ppm
-  //float smoke = analogRead(MQ2PIN);
-  int smoke = 0;  
+  int smoke = analogRead(MQ2PIN);
 
 
   updateVariables(); 
    
 
-  int tempCheck = checkTempComfortAlgorithm(temp_in);
+  int tempCheck = checkTempComfortAlgorithm(temp_in, temp_out);
 
-  int humCheck = checkHumComfortAlgorithm(hum_in);
+  int humCheck = checkHumComfortAlgorithm(hum_in, hum_out);
 
   int CO2Check = checkCO2ComfortAlgorithm(CO2);
 
   int smokeCheck = checkSmokeComfortAlgorithm(smoke);
+  
 
+  // CO2 and smoke levels have first priority
   if(CO2Check == 1 || smokeCheck == 1){
     digitalWrite(outputPIN, HIGH);
     delay(smoke_CO2_delay);
     digitalWrite(outputPIN, LOW);
   }
-  else if(tempCheck == 1 || humCheck == 1){
+  else if(tempCheck == 1 || humCheck == 1){ 
     digitalWrite(outputPIN, HIGH);
-    delay(temp_hum_delay);
+    // Check the difference between indoor hum/temp and desired values
+    if(abs(TEMP_HIGH - temp_in) < 5 || abs(TEMP_LOW - temp_in) < 5 || abs(HUM_HIGH - hum_in) < 5 || abs(HUM_LOW - hum_in) < 5){
+      delay(temp_hum_delay1); // if less than 5 degrees c or 5% hum, delay is longer
+    }
+    else delay(temp_hum_delay2); // if more than 5 degrees c or 5% hum, delay is shorter
+    
     digitalWrite(outputPIN, LOW);
   }
   else {
     digitalWrite(outputPIN, LOW);
   }
-
-  // if temp less than 70F send high signal to light
-  /*
-  if(CO2 > 1000 || smoke > 100){ // CO2 and smoke take highest priority
-    digitalWrite(outputPIN, HIGH);
-    delay(smoke_CO2_delay);
-    digitalWrite(outputPIN, LOW);
-  }
-  else if (hum_in > 60.0) {
-    digitalWrite(outputPIN, HIGH);
-    delay(temp_hum_delay);
-    digitalWrite(outputPIN, LOW);
-  }
-  else {
-    digitalWrite(outputPIN, LOW);
-  }*/
 
   // Print sensor readings to serial output
   Serial.print("DATA,TIME,"); //always write "DATA" to indicate the following as data
