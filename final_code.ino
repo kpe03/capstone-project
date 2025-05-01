@@ -45,7 +45,7 @@ DHT_Unified dht_out(DHTPIN_OUT, DHTTYPE);
    * @author Kazi Priom
    */
 int checkHumComfortAlgorithm(float hum_in, float hum_out) {
-      if ((hum_in > HUM_HIGH && hum_out < HUM_HIGH) || (hum_in < HUM_LOW && hum_out > HUM_LOW)) {
+      if ((hum_in > HUM_HIGH && hum_out < hum_in) || (hum_in < HUM_LOW && hum_out > hum_in)) {
         Serial.println("Indoor humidity outside of comfort range");
         return 1;
       }
@@ -62,7 +62,7 @@ int checkHumComfortAlgorithm(float hum_in, float hum_out) {
    */
   int checkTempComfortAlgorithm(float temp_in, float temp_out) {
     // Check for high outdoor temperature
-    if ((temp_in > TEMP_HIGH && temp_out < TEMP_HIGH) || (temp_in < TEMP_LOW && temp_out > TEMP_LOW)) {
+    if ((temp_in > TEMP_HIGH && temp_out < temp_in) || (temp_in < TEMP_LOW && temp_out > temp_in)) {
       Serial.println("Indoor temperature outside of comfort range");
       return 1;
     }
@@ -142,6 +142,7 @@ void setup() {
   sensor_co2.setMeasuringRange(Mhz19MeasuringRange::Ppm_5000);
   sensor_co2.enableAutoBaseCalibration();
 
+
   Serial.print("Preheating");  // Preheating, 3 minutes
   while (!sensor_co2.isReady()) {
     Serial.print(".");
@@ -209,7 +210,7 @@ void loop() {
     delay(smoke_CO2_delay);
     digitalWrite(outputPIN, LOW);
   }
-  else if(tempCheck == 1 && (hum_in < HUM_HIGH && hum_in > HUM_LOW)){ 
+  else if(tempCheck == 1 && (hum_out < HUM_HIGH && hum_out > HUM_LOW)){ 
     digitalWrite(outputPIN, HIGH);
     // Check the difference between indoor temp and desired values
     if(abs(TEMP_HIGH - temp_in) < 5 || abs(TEMP_LOW - temp_in) < 5){
@@ -219,7 +220,7 @@ void loop() {
     
     digitalWrite(outputPIN, LOW);
   }
-  else if(humCheck == 1 && (temp_in < TEMP_HIGH && temp_in > TEMP_LOW)){ 
+  else if(humCheck == 1 && (temp_out < TEMP_HIGH && temp_out > TEMP_LOW)){ 
     digitalWrite(outputPIN, HIGH);
     // Check the difference between indoor hum and desired values
     if(abs(HUM_HIGH - hum_in) < 5 || abs(HUM_LOW - hum_in) < 5){
