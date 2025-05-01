@@ -121,6 +121,14 @@ if __name__ == "__main__":
     #                    csv_filename='arduino_data.csv')
     
     # COM9 is a windows port, mac uses the following:
-    read_arduino_serial(port='/dev/cu.usbmodem101', 
+    # read_arduino_serial(port='/dev/cu.usbmodem101', 
+    #                    baud_rate=9600, 
+    #                    csv_filename='arduino_data.csv')
+    
+    # read_arduino_serial(port='/dev/cu.usbserial-1140', 
+    #                    baud_rate=9600, 
+    #                    csv_filename='arduino_data.csv')
+
+    read_arduino_serial(port='/dev/cu.usbmodem1101', 
                        baud_rate=9600, 
                        csv_filename='arduino_data.csv')
